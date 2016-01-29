@@ -1,5 +1,6 @@
 import pygame
 from keymap import *
+import math
 
 #Setting
 pygame.init()
@@ -28,6 +29,35 @@ class Object(object):
     def update(self):
         pass
 
+class Sprite(object):
+    def __init__(self, file_name, width=0, height=0, alpha=True, transparent=(000,000,000)):
+        if(alpha):
+            self.sprite_sheet = pygame.image.load(file_name).convert_alpha()
+        else:
+            self.sprite_sheet = pygame.image.load(file_name).convert()
+        self.sprite = []
+        self.sheet_width= self.sprite_sheet.get_size()[0]
+        self.sheet_height= self.sprite_sheet.get_size()[1]
+        self.image_count=0
+        if(width==0 or height==0):
+            width = self.sheet_width
+            height = self.sheet_height
+
+        for yy in range(self.sheet_height/height):
+            for xx in range(self.sheet_width/width):
+                image = pygame.Surface([width, height]).convert()
+                image.blit(self.sprite_sheet, (0, 0), (xx*width, yy*height, width, height))
+                image.set_colorkey(transparent)
+                self.sprite.append(image)
+                self.image_count+=1
+        print self.image_count
+    def get_image(self, index):
+        try:
+            return self.sprite[index]
+        except:
+            return self.sprite[0]
+
+
 #--- Objects ---
 #Player
 class Player(Object):
@@ -35,11 +65,19 @@ class Player(Object):
         print("the game is running on "+str(displayGetWidth())+"x"+str(displayGetHeight())+" screen")
         self.hp = 100;
         self.speed=2;
+        self.test = Sprite("idle.png",150,150)
+        self.image=self.test.get_image(0)
+        self.image_index = 0;
         ins = instanceCreate(GPS)
         ins.track = self
 
     def update(self):
-        pygame.draw.rect(surface,(0,0,0),[self.x,self.y,32,32])
+        self.image=self.test.get_image(int(math.floor(self.image_index/(FPS/(self.test.image_count-1)))))
+        self.image_index += 1;
+        if(self.image_index > FPS):
+            self.image_index = 0
+
+        surface.blit(self.image, (self.x,self.y))
         if(keyboardButton(K_UP)):
             self.y-=self.speed
         if(keyboardButton(K_DOWN)):

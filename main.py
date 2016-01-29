@@ -5,7 +5,7 @@ from keymap import *
 pygame.init()
 
 screenResolution = (640, 480)
-gameCaption = "great game"
+gameCaption = "test game"
 gameFont = pygame.font.SysFont("Arial", 12)
 FPS = 60
 
@@ -21,7 +21,6 @@ class Object(object):
         super(Object, self).__init__()
         self.x = x
         self.y = y
-        self.mask = pygame.Rect(32, 32, 32, 32)
 
     def init(self):
         pass

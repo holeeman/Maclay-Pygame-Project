@@ -98,9 +98,13 @@ def instanceCreate(obj, x=0, y=0):
     instanceList.append(ins)
     return ins
 
+#Game Init
+def gameInit():
+    instanceCreate(Player, 200, 200)
+
 #Game Start
 def gameStart():
-    instanceCreate(Player, 200, 200)
+    gameInit()
     for instance in instanceList:
         instance.init()
     while(True):
